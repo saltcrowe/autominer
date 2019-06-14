@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+curl -s https://www.zpool.ca/api/status \
+| jq -r '.[] | "\(.name) \(.port) \(.workers) \(.estimate_current)"' > ~/stats
+
+curl -s https://api.nicehash.com/api?method=simplemultialgo.info \
+| jq -r  '[.result.simplemultialgo] | .[][] | "\(.algo) \(.name) \(.port) \(.paying)"'\
+| awk '/daggerhashimoto/ {print $2 " "  $3 " " $1 " " $4}' >> ~/stats
+
+for i in 1 2 4 5 6 7 8 9 10 11 12 13
+
+do
+
+scp ~/stats  mario@miner1-${i}:~/zpool/bin/stats
